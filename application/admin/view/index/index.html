@@ -1,0 +1,130 @@
+{extend name="public/base" /}
+
+{block name='content'}
+<section class="Hui-article-box">
+    <div id="Hui-tabNav" class="Hui-tabNav hidden-xs">
+    <div class="Hui-tabNav-wp">
+        <ul id="min_title_list" class="acrossTab cl">
+            <li class="active">
+                <span title="我的桌面" data-href="/admin/index/index">我的桌面</span>
+                <em></em></li>
+        </ul>
+    </div>
+    <div class="Hui-tabNav-more btn-group"><a id="js-tabNav-prev" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d4;</i></a><a id="js-tabNav-next" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d7;</i></a></div>
+</div>
+    <div id="iframe_box" class="Hui-article" >
+        <div class="show_iframe">
+            <div style="display:none" class="loading"></div>
+            <!--<iframe scrolling="yes" frameborder="0" src="/admin/index/index"></iframe>-->
+            <article class="cl pd-20">
+                <p class="f-20 text-success">欢迎使用服装销售后台系统
+                <p>上次登录{:session('admin_info.login_ip')}  上次登录时间：{$Think.session.admin_info.login_time}
+                </p>
+                <table class="table table-border table-bordered table-bg">
+                    <thead>
+                    <tr>
+                        <th colspan="7" scope="col">信息统计</th>
+                    </tr>
+                    <tr class="text-c">
+                        <th>统计</th>
+                        <th>图片库</th>
+                        <th>产品库</th>
+                        <th>销量/件</th>
+                        <th>收益/元</th>
+                        <th>用户</th>
+                        <th>管理员</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="text-c">
+                        <td>总数</td>
+                        <td>{$a11}</td>
+                        <td>{$a12}</td>
+                        <td>{$a13}</td>
+                        <td>{$a14}</td>
+                        <td>{$a15}</td>
+                        <td>{$a16}</td>
+                    </tr>
+                    <tr class="text-c">
+                        <td>今日</td>
+                        <td>{$a21}</td>
+                        <td>{$a22}</td>
+                        <td>{$a23}</td>
+                        <td>{$a24}</td>
+                        <td>{$a25}</td>
+                        <td>{$a26}</td>
+                    </tr>
+                    <tr class="text-c">
+                        <td>本周</td>
+                        <td>{$a31}</td>
+                        <td>{$a32}</td>
+                        <td>{$a33}</td>
+                        <td>{$a34}</td>
+                        <td>{$a35}</td>
+                        <td>{$a36}</td>
+                    </tr>
+                    <tr class="text-c">
+                        <td>本月</td>
+                        <td>{$a41}</td>
+                        <td>{$a42}</td>
+                        <td>{$a43}</td>
+                        <td>{$a44}</td>
+                        <td>{$a45}</td>
+                        <td>{$a46}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table table-border table-bordered table-bg mt-20">
+                <thead>
+                <tr>
+                <th colspan="2" scope="col">服务器信息</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                <th width="30%">服务器计算机名</th>
+                <td><span id="lbServerName">{$Request.host}</span></td>
+                </tr>
+                <tr>
+                <td>服务器IP地址</td>
+                <td>{$Request.ip}</td>
+                </tr>
+                <tr>
+                <td>服务器域名</td>
+                <td>{$Request.domain}</td>
+                </tr>
+                <tr>
+                <td>服务器端口 </td>
+                <td>{$Request.port}</td>
+                </tr>
+                <tr>
+                <td>当前请求URL</td>
+                <!--传入参数true,显示包括域名的完整绝对URL请求地址-->
+                <!--PHP语句:<?php echo \think\Request::instance()->url(true); ?>-->
+                <td>{$Request.url.true}</td>
+                </tr>
+                <tr>
+                <td>当前PHP版本 </td>
+                <td>{$Think.const.PHP_VERSION}</td>
+                </tr>
+                <tr>
+                <td>服务器版本</td>
+                <td>{$Think.const.PHP_OS}</td>
+                </tr>
+
+                <tr>
+                <td>当前Session数量 </td>
+                <td>{:count($_SESSION)}</td>
+                </tr>
+                <tr>
+                <td>当前SessionID </td>
+                <td>{:session_id()}</td>
+                </tr>
+
+                </tbody>
+                </table>
+                </article>
+        </div>
+    </div>
+</section>
+{/block}

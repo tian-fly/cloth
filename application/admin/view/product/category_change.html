@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {include file="public/extend" /}
+</head>
+<body>
+<div class="container">
+    <form class="layui-form" action="">
+        <input type="hidden" id="pid" value="{$product.id}">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 150px">选择一级分类</label>
+                    <div class="layui-input-inline">
+                        <select name="category" lay-verify="required"  lay-filter="category">
+                            {foreach name="category" item="vo"}
+                            <option value="{$vo.id}" {$vo.id==$product.category.pid?'selected':''} >{$vo.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                    <label class="layui-form-label"  style="width: 150px">选择二级分类</label>
+                    <div class="layui-input-inline">
+                        <select name="categorys" lay-verify="required" id="category_id">
+                            {foreach name="categorySecond" item="vo"}
+                            <option value="{$vo.id}" {$vo.id==$product.category.id?'selected':''}>{$vo.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <hr/>
+    <hr/>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="confirm()">确认提交</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['form'], function() {
+        var form = layui.form;
+        form.on("select(category)",function(data){
+            $.get('http://www.tiancloth.com/admin/category/getChildrenCategory',{category:data.value},function(res){
+                if(res.status){
+                    $('#category_id').empty();
+                    for(var i=0;i<res.data.length;i++){
+                        $('#category_id').append("<option value="+res.data[i].id+">"+res.data[i].name+"</option>");
+                    }
+                    renderForm();
+                }else {
+                    return false;
+                }
+            })
+        });
+
+    });
+
+    function renderForm(){
+        layui.use(['form'], function() {
+            var form = layui.form;
+            form.render();
+        })
+    }
+
+
+
+    function confirm(){
+        var pid=$('#pid').val();
+        var category_id=$('#category_id').val();
+        $.post('http://www.tiancloth.com/admin/product/save_category',{pid:pid,category_id:category_id},function(res){
+            if(res.status){
+                layer.msg(res.message,{icon:1});
+                setTimeout(function(){
+                    window.location.reload();
+                },2000);
+
+            }else {
+                layer.msg('重选失败',{icon:2});
+                return false;
+            }
+        })
+    }
+</script>
+</body>
+</html>

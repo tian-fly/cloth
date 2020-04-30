@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {include file="public/extend" /}
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+    <span class="c-gray en">&gt;</span>
+    {$menu}
+    <span class="c-gray en">&gt;</span>
+    {$menuSon} </nav>
+<div class="Hui-article">
+<form class="layui-form" style="margin-top: 20px;">
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 150px">选择一级分类</label>
+            <div class="layui-input-inline">
+                <select name="category" lay-verify="required"  lay-filter="category">
+                    {foreach name="category" item="vo"}
+                    <option value="{$vo.id}" {$vo.id==$product.category.pid?'selected':''} >{$vo.name}</option>
+                    {/foreach}
+                </select>
+            </div>
+            <label class="layui-form-label"  style="width: 150px">选择二级分类</label>
+            <div class="layui-input-inline">
+                <select name="categorys" lay-verify="required" id="category_id" lay-filter="categorySecond">
+                    {foreach name="categorySecond" item="vo"}
+                    <option value="{$vo.id}" {$vo.id==$product.category.id?'selected':''}>{$vo.name}</option>
+                    {/foreach}
+                </select>
+            </div>
+            <label class="layui-form-label" style="width: 150px">选择品牌</label>
+            <div class="layui-input-inline">
+                <select name="brand" lay-verify="required"  lay-filter="brand" id="brand">
+                    {foreach name="brands" item="vo"}
+                    <option value="{$vo}" {$vo==$product.brand?'selected':''} >{$vo}</option>
+                    {/foreach}
+                </select>
+            </div>
+
+        </div>
+        <div class="layui-tab-item layui-show">
+            <div class="layui-form-item">
+                <label class="layui-form-label"  style="width: 150px">选择商品</label>
+                <div class="layui-input-inline">
+                    <select name="brand.name" lay-verify="required" id="product_id">
+                        {foreach name="products" item="vo"}
+                        <option value="{$vo.id}" {$vo.id==$product.name?'selected':''}>{$vo.name}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="layui-form-item">
+    <div class="layui-input-block">
+        <button class="layui-btn" onclick="confirm()">搜索</button>
+    </div>
+</div>
+
+{if condition="$count>0"}
+    <div class="container" id="content">
+    <article class="cl pd-20">
+        <div class="cl pd-5 bg-1 bk-gray mt-20">
+            <span class="l">  <a   class="btn btn-danger radius" id="deleteAll"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a></span>
+            <span class="r" style="float: right;">共有数据：<strong>{$count}</strong> 条</span>
+        </div>
+
+        <table class="table table-border table-bordered table-bg">
+            <thead>
+            <tr>
+                <th scope="col" colspan="13">{$menuSon}</th>
+            </tr>
+
+            <tr class="text-c">
+                <th><input type="checkbox" class="checkedAll" value=""></th>
+                <th>ID</th>
+                <th>用户</th>
+                <th>内容</th>
+                <th>星级评分</th>
+                <th>规格</th>
+                <th>时间</th>
+                <th>操作</th>
+            </tr>
+
+            </thead>
+            <tbody>
+            {foreach name="comment_list" item="pl"}
+            <tr class="text-c"  id="comment{$pl.id}">
+                <td><input type="checkbox" class="ids" value="{$pl.id}" name="ids[]"></td>
+                <td>{$pl.id}</td>
+                <td>{$pl.user.user_name}</td>
+                <td>{$pl.content}</td>
+                <td>{$pl.star}</td>
+                <td>{$pl.standard.color}{$pl.standard.size}</td>
+                <td>{$pl.create_time}</td>
+                <td class="td-manage"><a title="删除" href="javascript:;" onclick="comment_del(this,'{$pl.id}')" class="btn btn-danger" style="text-decoration:none">删除</a></td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </article>
+
+    <div class="page" style="left: 20px;position: relative;">
+        {$comment_list->render()}
+    </div>
+</div>
+{else/}
+<p align="center" style="color: red;">请选择要找的商品来获取评论，或该商品暂时没有评论信息</p>
+</div>
+{/if}
+
+
+<script src="__STATIC__/js/comment.js"></script>
+
+<script type="text/javascript">
+    /*
+     参数解释：
+     title	标题
+     url		请求的url
+     id		需要操作的数据id
+     w		弹出层宽度（缺省调默认值）
+     h		弹出层高度（缺省调默认值）
+     */
+
+    /*管理员-删除*/
+    function comment_del(obj,id){
+        layer.confirm('确认要删除吗？',{icon:3},function(index){
+            //此处请求后台程序，下方是成功后的前台处理……
+            $.get("{:url('comment/comment_del')}",{id:id});
+            $(obj).parents("tr").remove();
+            layer.msg('已删除!',{icon:1,time:1000});
+        });
+    }
+
+</script>
+<script>
+    layui.use(['form'], function() {
+        var form = layui.form;
+        form.on("select(category)",function(data){
+            $.get('http://www.tiancloth.com/admin/category/getChildrenCategorys',{category:data.value},function(res){
+                if(res.status){
+
+                    $('#category_id').empty();
+                    for(let i=0;i<res.data.categories.length;i++){
+                        $('#category_id').append("<option value="+res.data.categories[i].id+">"+res.data.categories[i].name+"</option>");
+                    }
+
+                    if(res.data.brands.length>0){
+                        $('#brand').empty();
+                        for(let i =0;i<res.data.brands.length;i++){
+                            $('#brand').append("<option value="+res.data.brands[i]+">"+res.data.brands[i]+"</option>");
+                        }
+                    }else {
+                        $('#brand').empty();
+                        $('#product_id').empty();
+                    }
+                    if(res.data.products.length>0){
+                        $('#product_id').empty();
+                        for(let i =0;i<res.data.products.length;i++){
+                            $('#product_id').append("<option value="+res.data.products[i].id+">"+res.data.products[i].name+"</option>");
+                        }
+                    }else {
+                        $('#product_id').empty();
+                    }
+
+                    renderForm();
+                }else {
+                    $('#category_id').empty();
+                    $('#brand').empty();
+                    $('#product_id').empty();
+                    renderForm();
+                }
+            })
+        });
+
+        form.on("select(categorySecond)",function(data){
+            $.get('http://www.tiancloth.com/admin/category/getBrand',{categorySecond:data.value},function(res){
+                if(res.status){
+
+                    $('#brand').empty();
+                    for(let i =0;i<res.data.brands.length;i++){
+                        $('#brand').append("<option value="+res.data.brands[i]+">"+res.data.brands[i]+"</option>");
+                    }
+
+                    if(res.data.products.length>0){
+                        $('#product_id').empty();
+                        for(let i =0;i<res.data.products.length;i++){
+                            $('#product_id').append("<option value="+res.data.products[i].id+">"+res.data.products[i].name+"</option>");
+                        }
+                    }else {
+                        $('#product_id').empty();
+                    }
+                    renderForm();
+                }else {
+                    $('#brand').empty();
+                    $('#product_id').empty();
+                    renderForm();
+
+                }
+            })
+        });
+
+        form.on("select(brand)",function(data){
+            $.get('http://www.tiancloth.com/admin/category/getProduct',{brand:data.value},function(res){
+                if(res.status){
+                    $('#product_id').empty();
+                    for(let i =0;i<res.data.length;i++){
+                        $('#product_id').append("<option value="+res.data[i].id+">"+res.data[i].name+"</option>");
+                    }
+                    renderForm();
+                }else {
+                    $('#product_id').empty();
+                    renderForm();
+                }
+            })
+        });
+
+    });
+
+    function renderForm(){
+        layui.use(['form'], function() {
+            var form = layui.form;
+            form.render();
+        })
+    }
+    function confirm(){
+        var product_id= $.trim($('#product_id').val());
+        if(!product_id){
+            layer.msg('请选择正确的商品',{icon:2});
+            $('#content').empty();
+            $('#content').append('<p align="center" style="color: red;">请选择要找的商品来获取评论，或该商品暂时没有评论信息</p>');
+            return false;
+        }
+        window.location.href="http://www.tiancloth.com/admin/comment/search?product_id="+product_id;
+    }
+</script>
+</body>
+</html>

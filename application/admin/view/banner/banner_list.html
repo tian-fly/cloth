@@ -1,0 +1,96 @@
+{extend name="public/base" /}
+{block name="header"}
+{/block}
+{block name="menu"}
+{/block}
+{block name="content"}
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+    <span class="c-gray en">&gt;</span>
+   {$menu}
+    <span class="c-gray en">&gt;</span>
+    {$menuSon} <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav>
+<div class="Hui-article">
+    <article class="cl pd-20">
+        <div class="cl pd-5 bg-1 bk-gray mt-20">
+            <span class="l"><a href="javascript:;" onclick="banner_edit('0')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加轮播</a> </span>
+            <span class="r">共有数据：<strong>{$count}</strong> 条</span>
+        </div>
+        <table class="table table-border table-bordered table-bg">
+            <thead>
+            <tr>
+                <th scope="col" colspan="9">{$menuSon}</th>
+            </tr>
+
+            <tr class="text-c">
+                <th width="40">ID</th>
+                <th >位置</th>
+                <th>子项</th>
+                <th >操作</th>
+            </tr>
+
+            </thead>
+            <tbody>
+            {foreach name="banner_list" item="ba"}
+            <tr class="text-c">
+                <td>{$ba.id}</td>
+                <td>{$ba.site}</td>
+                <td><a title="item" href="javascript:;" onclick="item('{$ba.id}')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a></td>
+                <td class="td-manage"><a title="编辑" href="javascript:;" onclick="banner_edit('{$ba.id}')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="banner_del(this,'{$ba.id}')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </article>
+    <div class="page" style="margin-left: 15px;position: absolute;top: 400px;">
+        {$banner_list->render()}
+    </div>
+</div>
+
+{/block}
+
+{block name="script"}
+<script type="text/javascript">
+
+    /*管理员-删除*/
+    function banner_del(obj,id){
+        layer.confirm('确认要删除吗？',{icon:3},function(index){
+            //此处请求后台程序，下方是成功后的前台处理……
+            $.get("{:url('banner/banner_del')}",{id:id},function(res){
+                if(res.status){
+                    $(obj).parents("tr").remove();
+                    layer.msg('已删除!',{icon:1,time:1000});
+                }else {
+                    layer.msg('删除失败',{icon:2,time:1000});
+                    return false;
+                }
+            });
+
+        });
+    }
+    /*管理员-编辑*/
+    function banner_edit(id){
+        layer.open({
+            type: 2,
+            title: id>0?'编辑轮播':'添加轮播',
+            shadeClose: true,
+            shade: false,
+            maxmin: true, //开启最大化最小化按钮
+            area: ['400px', '350px'],
+            content: '/admin/banner/banner_edit?id='+id
+        });
+    }
+
+    function item(id){
+        layer.open({
+            type: 2,
+            title: '子项',
+            shadeClose: true,
+            shade: false,
+            maxmin: true, //开启最大化最小化按钮
+            area: ['100%', '100%'],
+            content: '/admin/banner/item?id='+id
+        });
+    }
+</script>
+{/block}
+

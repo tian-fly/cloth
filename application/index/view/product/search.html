@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品搜索</title>
+    {include file='public/header' /}
+    <style type="text/css">
+        .top{
+            border: 1px solid black;
+            padding: 5px 5px;
+        }
+        input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
+            -webkit-appearance: none;
+        }
+        input[type="number"]{
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body>
+{include file="public/nav" /}
+{include file="public/nav_model" /}
+<div class="container">
+    <div align="center" style="margin-top: 10px;" >
+        <div class="input-group" style="width: 50%">
+            <input type="text" class="form-control" placeholder="输入商品内容..." id="products">
+            <span class="input-group-btn">
+             <button class="btn btn-default" type="button" onclick="searchs()" id="search"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp;</button>
+         </span>
+        </div>
+    </div>
+    {if condition="count($products) gt 0"}
+    <h5 style="color: red">搜到:<?php echo count($products) ?>件商品</h5>
+    <hr/>
+    <div class="row" style="margin-top: 20px">
+        {foreach name="$products" item="vo"}
+        <div class="col-sm-6 col-md-3" style="height: 490px;">
+            <div class="thumbnail" style="border: 1px solid palegoldenrod;">
+                <a style="cursor: pointer" href="http://www.tiancloth.com/index/product/{$vo.id}"><img src="{$vo.center_img.img_url}" alt="..." ></a>
+                <div class="caption">
+                    <h3 style="color: red">优惠价：¥{$vo.price}</h3>
+                    <p>{$vo.brand}&nbsp;{$vo.name}&nbsp;&nbsp;<span style="color: red;float: right">销量：{$vo.sell}</span></p>
+                </div>
+            </div>
+        </div>
+        {/foreach}
+    </div>
+      {else /}
+    <h1 align="center" style="position: relative;top: 50px;height: 100px;">不好意思，本店暂无您需要的商品~~~~~~~~</h1>
+    {/if}
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <ul class="layui-tab-title">
+            <li class="layui-this">浏览过的商品</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="row">
+                    {foreach name="$visitProduct" item="vo"}
+                    <div class="col-sm-6 col-md-3">
+                        <div class="thumbnail" style="border: 1px solid palegoldenrod;">
+                            <a style="cursor: pointer" href="index/product/{$vo.id}"><img src="{$vo.centerImg.img_url}" alt="..." ></a>
+                            <div class="caption">
+                                <h3 style="color: red">¥{$vo.price}</h3>
+                                <p>{$vo.brand}&nbsp;{$vo.name}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {/foreach}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    $('#product').keydown(function(e){
+        if(e.keyCode==13){
+            $('#search').click();
+        }
+    })
+
+    function searchs(){
+            var product= $.trim($('#products').val());
+            if(!product){
+                alert('请输入查找的商品名字');
+                return false;
+            }else {
+                window.location.href="http://www.tiancloth.com/index/product/search?product="+product;
+
+            }
+        }
+</script>
+
+</body>
+</html>

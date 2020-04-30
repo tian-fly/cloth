@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>秒杀专区</title>
+    {include file='public/header' /}
+</head>
+<body>
+{include file="public/nav" /}
+
+<div class="container">
+    <div class="jumbotron"  style="background-color: red">
+        <h1>Hi</h1>
+        <p>欢迎来到秒杀专区,,Are you Ready?</p>
+    </div>
+    {include file="public/nav_model" /}
+    <div class="row" style="margin-top: 20px">
+        {foreach name="$products" item="vo"}
+        <div class="col-sm-6 col-md-3 " style="height: 490px;">
+            <div class="thumbnail" style="border: 1px solid red;">
+                <a style="cursor: pointer" href="http://www.tiancloth.com/index/product/{$vo.id}"><img src="{$vo.img_url}" alt="..." ></a>
+                <div class="caption">
+                    <?php $nowtime  = time();
+                       $lefttime=$vo['start_time']-$nowtime;
+                     ?>
+                    <input type="hidden" id="time" value="{$lefttime}">
+                    <h3 style="color: red">¥{$vo.price}<span style="float: right" class="times"><strong class="RemainH">00</strong>:<strong class="RemainM">00</strong>:<strong class="RemainS">00</strong></span></h3>
+                    <p>{$vo.brand}&nbsp;{$vo.name}&nbsp;{$vo.standard}x1<span style="float: right;color: red"><a class="btn btn-danger skill" onclick="skills('{$vo.id}')">抢</a></span></p>
+                </div>
+            </div>
+        </div>
+        {/foreach}
+    </div>
+    {$products->render()}
+</div>
+<footer style="height: 100px;background-color: black;font-size: 40px;display: flex;justify-content: center;" >
+
+    <ul style="color: white;display: flex;align-items: center;" >
+        <li>客服</li>&nbsp;&nbsp;
+        <li>电话：123456789</li>&nbsp;&nbsp;
+        <li>WeChat:6254545</li>
+    </ul>
+
+</footer>
+<script language="JavaScript">
+    var runtimes = 0;
+    function GetRTime(){
+        var time=parseInt($('#time').val());
+        var nMS = time-runtimes;
+        if(nMS<0){
+            $('.skill').text('活动已结束!');
+            $('.skill').attr('disabled',true);
+            $('.times').remove();
+        }
+        var nH=Math.floor(nMS/(60*60))%24;
+        var nM=Math.floor(nMS/60) % 60;
+        var nS=Math.floor(nMS) % 60;
+        $('.RemainH').text(nH);
+        $('.RemainM').text(nM);
+        $('.RemainS').text(nS);
+        runtimes++;
+        setTimeout("GetRTime()",1000);
+        }
+//         GetRTime()
+</script>
+<script>
+
+    function skills(id){
+        $.get('http://www.tiancloth.com/index/skill/skill',{id:id},function(res){
+            if(res.status){
+                layer.msg(res.message,{icon:1});
+//                window.location.href="http://www.tiancloth.com/index/skill/toOrder";
+            }else {
+                layer.msg(res.message,{icon:2});
+                return false;
+            }
+        })
+    }
+</script>
+</body>
+</html>

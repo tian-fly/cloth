@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {include file="public/extend" /}
+</head>
+<body>
+<div class="container">
+<h5 style="color: red">提示：如果已上传图片而放弃添加轮播条，请点击取消上传按钮后再退出本页面</h5>
+<form class="layui-form" style="margin-top: 20px;">
+    <input type="hidden" name="banner_id" id="banner_id" value="{$banner_id}">
+    <input type="hidden" name="img_id" value="" id="img_id">
+
+    --------------------------------------------------------------展示图片-----------------------------------------------------------
+
+    <div class="layui-upload"  id="boss" style="margin-top: 100px;">
+        <button type="button" class="layui-btn" id="uploads">上传图片</button>
+    </div>
+
+    -------------------------------------------------------------关联产品------------------------------------------------------------
+
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <div class="layui-tab-item layui-show">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 150px">选择一级分类</label>
+                <div class="layui-input-inline">
+                    <select name="category" lay-verify="required"  lay-filter="category">
+                        {foreach name="category" item="vo"}
+                        <option value="{$vo.id}" {$vo.id==$bannerItem.product.category.pid?'selected':''} >{$vo.name}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <label class="layui-form-label"  style="width: 150px">选择二级分类</label>
+                <div class="layui-input-inline">
+                    <select name="categorys" lay-verify="required" id="category_id" lay-filter="categorySecond">
+                        {foreach name="categorySecond" item="vo"}
+                        <option value="{$vo.id}" {$vo.id==$bannerItem.product.category.id?'selected':''}>{$vo.name}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-tab-item layui-show">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 150px">选择品牌</label>
+                    <div class="layui-input-inline">
+                        <select name="brand" lay-verify="required"  lay-filter="brand" id="brand">
+                            {foreach name="brands" item="vo"}
+                            <option value="{$vo}" {$vo==$bannerItem.product.brand?'selected':''} >{$vo}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                    <label class="layui-form-label"  style="width: 150px">选择商品</label>
+                    <div class="layui-input-inline">
+                        <select name="brand.name" lay-verify="required" id="product_id">
+                            {foreach name="products" item="vo"}
+                            <option value="{$vo.id}" {$vo.id==$bannerItem.product.name?'selected':''}>{$vo.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<br/>
+<br/>
+<div class="layui-form-item">
+    <div class="layui-input-block">
+        <button class="layui-btn" onclick="confirm()">确认</button>
+        <button class="layui-btn" onclick="cancels()">取消</button>
+    </div>
+</div>
+</div>
+<script>
+
+
+    layui.use('upload', function() {
+        var $ = layui.jquery
+                , upload = layui.upload;
+        var banner_id=$('#banner_id').val();
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#uploads'
+            , url: 'http://www.tiancloth.com/admin/banner/uploadPicture'
+            ,size:2000
+            ,data:{banner_id:banner_id}
+            ,exts:'jpg|png|gif|jpeg'
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.status==1) {
+                    layer.closeAll('loading');
+                    $('#uploads').remove();
+                    $('#boss').append('<img id="img" alt="轮播条展示图" width="80%" height="500" src="'+res.img_url+'">'+'<button type="button" class="layui-btn" id="test1">修改</button>');
+                    $('#img_id').val(res.img_id);
+                    layer.msg(res.message,{icon:1});
+
+                }
+                else {
+                    layer.closeAll('loading');
+
+                    layer.msg(res.message,{icon:2});
+                    return false;
+                }
+                //上传成功
+            }
+            , error: function () {
+                layer.closeAll('loading');
+
+            }
+        });
+    });
+
+    layui.use('upload', function() {
+        var $ = layui.jquery
+                , upload = layui.upload;
+        var site=$('#site').val();
+        var img_id=$('#img_id').val();
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            , url: 'http://www.tiancloth.com/admin/banner/changePictureBefore'
+            ,size:2000
+            ,data:{site:site,img_id:img_id}
+            ,exts:'jpg|png|gif|jpeg'
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.status==1) {
+                    $('#img').attr('src',res.img_url);
+                    layer.msg(res.message, {icon: 1});
+                }
+                else {
+                    layer.closeAll('loading');
+                    layer.msg(res.message,{icon:2});
+                    return false;
+                }
+                //上传成功
+            }
+            , error: function () {
+                layer.closeAll('loading');
+            }
+        });
+    });
+
+    layui.use(['form'], function() {
+        var form = layui.form;
+        form.on("select(category)",function(data){
+            $.get('http://www.tiancloth.com/admin/category/getChildrenCategorys',{category:data.value},function(res){
+                if(res.status){
+
+                    $('#category_id').empty();
+                    for(let i=0;i<res.data.categories.length;i++){
+                        $('#category_id').append("<option value="+res.data.categories[i].id+">"+res.data.categories[i].name+"</option>");
+                    }
+
+                    if(res.data.brands.length>0){
+                        $('#brand').empty();
+                        for(let i =0;i<res.data.brands.length;i++){
+                            $('#brand').append("<option value="+res.data.brands[i]+">"+res.data.brands[i]+"</option>");
+                        }
+                    }else {
+                        $('#brand').empty();
+                        $('#product_id').empty();
+                    }
+                    if(res.data.products.length>0){
+                        $('#product_id').empty();
+                        for(let i =0;i<res.data.products.length;i++){
+                            $('#product_id').append("<option value="+res.data.products[i].id+">"+res.data.products[i].name+"</option>");
+                        }
+                    }else {
+                        $('#product_id').empty();
+                    }
+
+                    renderForm();
+                }else {
+                    $('#category_id').empty();
+                    $('#brand').empty();
+                    $('#product_id').empty();
+                    renderForm();
+                }
+            })
+        });
+
+        form.on("select(categorySecond)",function(data){
+            $.get('http://www.tiancloth.com/admin/category/getBrand',{categorySecond:data.value},function(res){
+                if(res.status){
+
+                    $('#brand').empty();
+                    for(let i =0;i<res.data.brands.length;i++){
+                        $('#brand').append("<option value="+res.data.brands[i]+">"+res.data.brands[i]+"</option>");
+                    }
+
+                    if(res.data.products.length>0){
+                        $('#product_id').empty();
+                        for(let i =0;i<res.data.products.length;i++){
+                            $('#product_id').append("<option value="+res.data.products[i].id+">"+res.data.products[i].name+"</option>");
+                        }
+                    }else {
+                        $('#product_id').empty();
+                    }
+                    renderForm();
+                }else {
+                    $('#brand').empty();
+                    $('#product_id').empty();
+                    renderForm();
+
+                }
+            })
+        });
+
+        form.on("select(brand)",function(data){
+            $.get('http://www.tiancloth.com/admin/category/getProduct',{brand:data.value},function(res){
+                if(res.status){
+                    $('#product_id').empty();
+                    for(let i =0;i<res.data.length;i++){
+                        $('#product_id').append("<option value="+res.data[i].id+">"+res.data[i].name+"</option>");
+                    }
+                    renderForm();
+                }else {
+                    $('#product_id').empty();
+                    renderForm();
+                }
+            })
+        });
+
+    });
+
+    function renderForm(){
+        layui.use(['form'], function() {
+            var form = layui.form;
+            form.render();
+        })
+    }
+    function confirm(){
+        var banner_id= $.trim($('#banner_id').val());
+        var img_id= $.trim($('#img_id').val());
+        if(!img_id){
+            layer.msg('请上传图片',{icon:2});
+            return false;
+        }
+        var product_id= $.trim($('#product_id').val());
+        if(!product_id){
+            layer.msg('请选择正确的商品绑定',{icon:2});
+            return false;
+        }
+        $.ajax({
+            type:'post',
+            url:'http://www.tiancloth.com/admin/banner/save_item',
+            data:{banner_id:banner_id,img_id:img_id,product_id:product_id},
+            dataType:'json',
+            success:function(res){
+                if(res.status){
+                    parent.layer.msg(res.message,{icon:1});
+                    parent.window.location.reload();
+                }else{
+                    layer.msg(res.message,{icon:2});
+                    return false;
+                }
+            }
+
+        });
+    }
+
+    function cancels(){
+        var img_id= $.trim($('#img_id').val());
+        $.ajax({
+            type:'post',
+            url:'http://www.tiancloth.com/admin/banner/item_cancels',
+            data:{img_id:img_id},
+            dataType:'json',
+            success:function(res){
+                if(res.status){
+                    parent.layer.msg(res.message,{icon:1});
+                    if(img_id){
+                        $('#img').attr('src','');
+                        $('#img_id').val('');
+                        $('#boss').append
+                    }
+
+                }else{
+                    layer.msg(res.message,{icon:2});
+                    return false;
+                }
+            }
+
+        });
+    }
+
+</script>
+</body>
+</html>

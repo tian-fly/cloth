@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {include file="public/extend" /}
+</head>
+<body>
+<form class="layui-form" style="margin-top: 20px;">
+    <input type="hidden" value="{$_GET['id']}" name="id">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 150px">banner位置：</label>
+        <div class="layui-input-inline">
+            <input type="text" name="site" placeholder="请输入banner位置" autocomplete="off" class="layui-input" id="site" value="{$banner.site}">
+        </div>
+    </div>
+</form>
+<br/>
+<br/>
+<div class="layui-form-item">
+    <div class="layui-input-block">
+        <button class="layui-btn" onclick="confirm()">确认</button>
+    </div>
+</div>
+<script>
+    layui.use(['carousel', 'form'], function() {
+        var carousel = layui.carousel
+                , form = layui.form;
+    });
+
+    function confirm(){
+        var site= $.trim($('#site').val());
+        if(!site){
+            layer.msg('banner位置不能为空',{icon:2});
+            return false;
+        }
+        $.ajax({
+            type:'post',
+            url:'http://www.tiancloth.com/admin/banner/save_banner',
+            data:$('form').serialize(),
+            dataType:'json',
+            success:function(res){
+                if(res.status){
+                    parent.layer.msg(res.message,{icon:1});
+                    parent.window.location.reload();
+                }else{
+                    layer.msg(res.message,{icon:2});
+                    return false;
+                }
+            }
+
+        });
+    }
+</script>
+</body>
+</html>

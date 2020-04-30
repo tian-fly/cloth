@@ -1,0 +1,253 @@
+{extend name="public/base" /}
+{block name="header"}
+{/block}
+{block name="menu"}
+{/block}
+{block name='meta'}
+{__block__}
+{include file="public/extend" /}
+{/block}
+{block name='content'}
+<div class="container">
+    <form class="layui-form" action="">
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <li class="layui-this">商品概述</li>
+    </ul>
+    <div class="layui-tab-item layui-show">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">品牌</label>
+            <div class="layui-input-block">
+                <input type="text" name="brand" id="brand" required  lay-verify="required" placeholder="请输入品牌" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" id="name" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品价格</label>
+            <div class="layui-input-block">
+                <input type="text" name="price" id="price" required  lay-verify="required" placeholder="要求：xx.xx" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <br/>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 150px">选择一级分类</label>
+            <div class="layui-input-inline">
+                <select name="category" lay-verify="required"  lay-filter="category">
+                    {foreach name="category" item="vo"}
+                     <option value="{$vo.id}">{$vo.name}</option>
+                    {/foreach}
+                </select>
+            </div>
+            <label class="layui-form-label"  style="width: 150px">选择二级分类</label>
+            <div class="layui-input-inline">
+                <select name="categorys" lay-verify="required" id="category_id">
+                    {foreach name="categorySecond" item="vo"}
+                    <option value="{$vo.id}">{$vo.name}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <ul class="layui-tab-title">
+            <li class="layui-this">商品参数</li>
+        </ul>
+        <div class="layui-tab-item layui-show">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">简介</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="detail" id="detail" required  lay-verify="required" placeholder="请输入商品简介" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">适用季节</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="season" id="season" required  lay-verify="required" placeholder="春" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">面料</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="fabric" id="fabric" required  lay-verify="required" placeholder="如：棉氨" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">适用场合</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="scene" id="scene" required  lay-verify="required" placeholder=" 如：运动,休闲,通勤" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">产地</label>
+                <div class="layui-input-block">
+                    <input type="text" name="place" id="place" required  lay-verify="required" placeholder="请输入商品生产的地方" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">风格</label>
+                <div class="layui-input-block">
+                    <input type="text" name="type" id="type" required  lay-verify="required" placeholder="如：休闲,时尚,百搭" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">材质</label>
+                <div class="layui-input-block">
+                    <input type="text" name="material" id="material" required  lay-verify="required" placeholder="如：面料成分：95%棉 5%氨纶" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">洗涤说明</label>
+                <div class="layui-input-block">
+                    <input type="text" name="explain" id="explain" required  lay-verify="required" placeholder="请输入洗涤说明" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" id="standards">
+        <ul class="layui-tab-title">
+            <li class="layui-this">商品规格</li>
+        </ul>
+        <div class="layui-tab-item layui-show">
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">颜色</label>
+                <div class="layui-input-block">
+                    <input type="text" name="colors"  required  lay-verify="required" placeholder="请输入商品颜色" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-tab-item layui-show">
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">尺寸大小</label>
+                <div class="layui-input-block">
+                    <input type="text" name="sizes"  required  lay-verify="required" placeholder="格式：M(统一大写)" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-tab-item layui-show">
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">进货量</label>
+                <div class="layui-input-block">
+                    <input type="text" name="stocks"  required  lay-verify="required" placeholder="请输入商品进货量" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+    </div>
+        <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="addStandard()">增加规格</button>
+    </form>
+    <hr/>
+    <hr/>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="confirm()">确认提交</button>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script>
+    layui.use(['form'], function() {
+        var form = layui.form;
+        form.on("select(category)",function(data){
+            $.get('http://www.tiancloth.com/admin/category/getChildrenCategory',{category:data.value},function(res){
+                if(res.status){
+                    $('#category_id').empty();
+                    for(var i=0;i<res.data.length;i++){
+                        $('#category_id').append("<option value="+res.data[i].id+">"+res.data[i].name+"</option>");
+                    }
+                    renderForm();
+                }else {
+                    return false;
+                }
+            })
+        });
+
+    });
+
+    function renderForm(){
+        layui.use(['form'], function() {
+            var form = layui.form;
+            form.render();
+        })
+    }
+
+    function addStandard(){
+        $('#standards').append('<hr/>'+' <div class="layui-tab-item layui-show">'+
+                '<div class="layui-form-item layui-form-text">'+
+                '<label class="layui-form-label">颜色</label>'+
+        '<div class="layui-input-block">'+
+        '<input type="text" name="colors"  required  lay-verify="required" placeholder="请输入商品颜色" autocomplete="off" class="layui-input">'+
+        '</div>'+
+        '</div>'+
+        ' </div>'+
+         '<div class="layui-tab-item layui-show">'+
+        ' <div class="layui-form-item layui-form-text">'+
+        ' <label class="layui-form-label">尺寸大小</label>'+
+        '<div class="layui-input-block">'+
+        ' <input type="text" name="sizes"  required  lay-verify="required" placeholder="格式：M" autocomplete="off" class="layui-input">'+
+        ' </div>'+
+        ' </div>'+
+        '</div>'+
+        '<div class="layui-tab-item layui-show">'+
+        '<div class="layui-form-item layui-form-text">'+
+        '<label class="layui-form-label">进货量</label>'+
+        '<div class="layui-input-block">'+
+        '<input type="text" name="stocks"  required  lay-verify="required" placeholder="请输入商品进货量" autocomplete="off" class="layui-input">'+
+        '</div>'+
+        '</div>'+
+        '</div>');
+    }
+
+    function confirm(){
+        var brand=$('#brand').val();
+        var name=$('#name').val();
+        var price=$('#price').val();
+        var category_id=$('#category_id').val();
+
+        var detail=$('#detail').val();
+        var season=$('#season').val();
+        var fabric=$('#fabric').val();
+        var scene=$('#scene').val();
+        var place=$('#place').val();
+        var type=$('#type').val();
+        var material=$('#material').val();
+        var explain=$('#explain').val();
+
+        var colors=[];
+        $("input[name='colors']").each(function(){
+            colors.push($(this).val());
+        });
+
+        var sizes=[];
+        $("input[name='sizes']").each(function(){
+            sizes.push($(this).val());
+        });
+
+        var stocks=[];
+        $("input[name='stocks']").each(function(){
+            stocks.push($(this).val());
+        });
+
+        $.post('http://www.tiancloth.com/admin/product/save',{brand:brand,name:name,price:price,category_id:category_id,
+            detail:detail,season:season,fabric:fabric,scene:scene,place:place,type:type,material:material,
+            explain:explain,colors:colors,sizes:sizes,stocks:stocks
+        },function(res){
+            if(res.status){
+                layer.msg(res.message,{icon:1});
+                window.location.reload();
+            }else {
+                layer.msg('添加失败',{icon:2});
+                return false;
+            }
+        })
+    }
+</script>
+{/block}

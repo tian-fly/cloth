@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {include file="public/extend" /}
+</head>
+<body>
+<div class="container">
+    <form class="layui-form" action="">
+        <input type="hidden" name="id" value="{$product.id}">
+        <div class="layui-tab-item layui-show">
+            <div class="layui-form-item">
+                <label class="layui-form-label">简介</label>
+                <div class="layui-input-block">
+                    <input type="text" name="detail" value="{$product.param.detail}" id="detail" required  lay-verify="required" placeholder="请输入商品简介" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">适用季节</label>
+                <div class="layui-input-block">
+                    <input type="text" name="season" value="{$product.param.season}" id="season" required  lay-verify="required" placeholder="春" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">面料</label>
+                <div class="layui-input-block">
+                    <input type="text" name="fabric" value="{$product.param.fabric}" id="fabric" required  lay-verify="required" placeholder="如：棉氨" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">适用场合</label>
+                <div class="layui-input-block">
+                    <input type="text" name="scene" value="{$product.param.scene}" id="scene" required  lay-verify="required" placeholder=" 如：运动,休闲,通勤" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">产地</label>
+                <div class="layui-input-block">
+                    <input type="text" name="place" value="{$product.param.place}" id="place" required  lay-verify="required" placeholder="请输入商品生产的地方" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">风格</label>
+                <div class="layui-input-block">
+                    <input type="text" name="type" value="{$product.param.type}" id="type" required  lay-verify="required" placeholder="如：休闲,时尚,百搭" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">材质</label>
+                <div class="layui-input-block">
+                    <input type="text" name="material" value="{$product.param.material}" id="material" required  lay-verify="required" placeholder="如：面料成分：95%棉 5%氨纶" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">洗涤说明</label>
+                <div class="layui-input-block">
+                    <input type="text" name="explain" value="{$product.param.explain}" id="explain" required  lay-verify="required" placeholder="请输入洗涤说明" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </form>
+    <hr/>
+    <hr/>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="confirm()">确认提交</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['form'], function() {
+        var form = layui.form;
+
+    });
+
+    function confirm(){
+        $.post('http://www.tiancloth.com/admin/product/save_param',$('form').serialize(),function(res){
+            if(res.status){
+                layer.msg(res.message,{icon:1});
+                setTimeout(function(){
+                    window.location.reload();
+                },2000);
+
+            }else {
+                layer.msg('修改失败',{icon:2});
+                return false;
+            }
+        })
+    }
+</script>
+</body>
+</html>

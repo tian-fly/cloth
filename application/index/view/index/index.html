@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    {include file='public/header' /}
+</head>
+<body>
+{include file="public/nav" /}
+<div style="width: 100%;background-color: white" align="center" >
+<div class="layui-carousel " id="carousel"  align="center"  >
+    <div carousel-item >
+        {foreach name="banner.banner_item" item="vo"}
+        <div align="center"><a href="http://www.tiancloth.com/index/product/{$vo.product_id}"><img src="{$vo.images.img_url}" style="width: 100%;height: 100%"></a></div>
+        {/foreach}
+    </div>
+</div>
+</div>
+<div class="container">
+    <br/>
+    <br/>
+    <div align="center" style="margin-top: 10px;" >
+        <div class="input-group" style="width: 50%">
+            <input type="text" class="form-control" placeholder="输入商品内容..." id="products">
+            <span class="input-group-btn">
+             <button class="btn btn-default" type="button" onclick="searchs()" id="search"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp;</button>
+         </span>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <span class="row">
+        <span class="col-md-4"><a style="cursor: pointer;width: 100%" href="/" class="btn {if condition='$active eq 0'}btn-danger{else/}btn-default{/if}" role="button"  >&nbsp;最热商品</a></span>
+        <span class="col-md-4"><a style="cursor: pointer;width: 100%" href="/rencent" class="btn {if condition='$active eq 1'}btn-danger{else/}btn-default{/if}" role="button"  >&nbsp;最新商品</a></span>
+        <span class="col-md-4"><a style="fcursor: pointer;width: 100%" href="index/category" class="btn btn-default" role="button"  >&nbsp;商品分类</a></span>
+    </span>
+    <br/>
+    <br/>
+   <hr/>
+{include file="public/nav_model" /}
+    <div class="row" style="margin-top: 20px">
+        {foreach name="$products" item="vo"}
+        <div class="col-sm-6 col-md-3 " style="height: 490px;">
+            <div class="thumbnail" style="border: 1px solid palegoldenrod;">
+                <a style="cursor: pointer" href="index/product/{$vo.id}"><img src="{$vo.centerImg.img_url}" alt="..." ></a>
+                <div class="caption">
+                    <h3 style="color: red">¥{$vo.price}</h3>
+                    <p>{$vo.brand}&nbsp;{$vo.name}</p>
+                </div>
+            </div>
+        </div>
+        {/foreach}
+    </div>
+    {$products->render()}
+</div>
+<footer style="height: 100px;background-color: black;font-size: 40px;display: flex;justify-content: center;" >
+
+<ul style="color: white;display: flex;align-items: center;" >
+    <li>客服</li>&nbsp;&nbsp;
+    <li>电话：123456789</li>&nbsp;&nbsp;
+    <li>WeChat:6254545</li>
+</ul>
+
+</footer>
+    <script>
+        layui.use('carousel', function(){
+            var carousel = layui.carousel;
+            //建造实例
+            carousel.render({
+                elem: '#carousel'
+                ,width: '95%' //设置容器宽度
+                ,arrow: 'always' //始终显示箭头
+                ,height:'400px'
+                ,anim: 'fade' //切换动画方式
+            });
+        });
+
+
+        $('#product').keydown(function(e){
+            if(e.keyCode==13){
+                $('#search').click();
+            }
+        })
+
+        function searchs(){
+            var product= $.trim($('#products').val());
+            if(!product){
+                alert('请输入查找的商品名字');
+                return false;
+            }else {
+                window.location.href="http://www.tiancloth.com/index/product/search?product="+product;
+
+            }
+        }
+    </script>
+
+</body>
+</html>

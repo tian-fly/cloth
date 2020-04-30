@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {include file="public/header" /}
+</head>
+<body style="background-color: #9c9c9c;margin-top: 10px;">
+<div class="container">
+{foreach name="orders" item="vo"}
+<div class="layui-card">
+    <div class="layui-card-header">
+        <div class="layui-row">
+            <div class="layui-col-md3">{$vo.order_no}</div>
+            <div class="layui-col-md2">{$vo.create_time}</div>
+            <div class="layui-col-md1 layui-col-md-offset4" id="order{$vo.id}">
+                <span style="color: red;cursor: pointer;" onclick="read('{$vo.id}')"><span class="layui-badge-dot"></span>未读</span>
+            </div>
+            <div class="layui-col-md1"><a onclick="look('{$vo.id}')">查看</a></div>
+        </div>
+    </div>
+    <div class="layui-card-body">
+        <table class="layui-table" lay-even lay-skin="nob">
+            <colgroup>
+                <col width="150">
+                <col>
+            </colgroup>
+            <tbody>
+            <tr>
+                <td>订单状态</td>
+                <td style="color: red">{if condition="$vo.status eq 0"}未支付{elseif condition="$vo.status eq 1" /}已支付{elseif condition="$vo.status eq 2"/}已发货{else /}交易成功{/if}
+                </td>
+            </tr>
+            <tr>
+                <td>商品数量</td>
+                <td>{$vo.count}</td>
+            </tr>
+            <tr>
+                <td>商品名称</td>
+                <td>
+                    {foreach name="$vo.products" item="vos"}
+                        {$vos.name}:{$vos.pivot.standard_id|getStandard}&nbsp;&nbsp;&nbsp;x{$vos.pivot.count}/
+                    {/foreach}
+                </td>
+            </tr>
+            <tr>
+                <td>订单总价</td>
+                <td style="color:red;">¥{$vo.total_price}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+    <br/>
+    <br/>
+{/foreach}
+</div>
+<div class="page" style="left: 20px;position: relative;">
+    {$orders->render()}
+</div>
+<script>
+    function look(id){
+        parent.window.location.href="http://www.tiancloth.com/index/order/look?id="+id;
+    }
+
+    function read(id){
+        $.get('http://www.tiancloth.com/message/read',{id:id},function(res){
+            if(res.status){
+                layer.msg(res.message,{icon:1});
+                $('#order'+id).empty();
+                $('#order'+id).text('已读');
+            }else {
+                layer.msg(res.message,{icon:2});
+                return false;
+            }
+        },'json')
+    }
+
+</script>
+</body>
+</html>

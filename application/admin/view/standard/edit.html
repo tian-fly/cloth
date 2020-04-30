@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {include file="public/extend" /}
+</head>
+<body>
+<form class="layui-form" style="margin-top: 20px;">
+    <input type="hidden" value="{$_GET['id']}" name="id">
+    <input type="hidden" value="{$product_id}" name="product_id">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 100px;">颜色：</label>
+        <div class="layui-input-block">
+            <input type="text" name="color" placeholder="请输入颜色" autocomplete="off" class="layui-input" id="color" value="{$standard.color}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 100px;">尺寸：</label>
+        <div class="layui-input-block">
+            <input type="text" name="size" placeholder="请输入尺寸" autocomplete="off" class="layui-input" id="size" value="{$standard.size}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 100px;">库存：</label>
+        <div class="layui-input-block">
+            <input type="text" name="stock" placeholder="请输入库存数量" autocomplete="off" class="layui-input" id="stock" value="{$standard.stock}">
+        </div>
+    </div>
+</form>
+<br/>
+<br/>
+<div class="layui-form-item">
+    <div class="layui-input-block">
+        <button class="layui-btn" onclick="confirm()">确认</button>
+    </div>
+</div>
+<script>
+    layui.use(['carousel', 'form'], function() {
+        var carousel = layui.carousel
+                , form = layui.form;
+    });
+
+    function confirm(){
+        var color= $.trim($('#color').val());
+        if(!color){
+            layer.msg('名称不能为空',{icon:2});
+            return false;
+        }
+        var size= $.trim($('#size').val());
+        if(!size){
+            layer.msg('名称不能为空',{icon:2});
+            return false;
+        }
+        var stock= $.trim($('#stock').val());
+        if(!stock){
+            layer.msg('名称不能为空',{icon:2});
+            return false;
+        }
+        $.ajax({
+            type:'post',
+            url:'http://www.tiancloth.com/admin/standard/save',
+            data:$('form').serialize(),
+            dataType:'json',
+            success:function(res){
+                if(res.status){
+                    parent.layer.msg(res.message,{icon:1});
+                    setTimeout(function(){
+                        parent.window.location.reload();
+                    },1500)
+
+                }else{
+                    layer.msg(res.message,{icon:2});
+                    return false;
+                }
+            }
+
+        });
+    }
+</script>
+</body>
+</html>

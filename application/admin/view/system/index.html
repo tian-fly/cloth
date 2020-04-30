@@ -1,0 +1,70 @@
+{extend name="public/base" /}
+{block name="header"}
+{/block}
+{block name="menu"}
+{/block}
+{block name='meta'}
+{__block__}
+{include file="public/extend" /}
+{/block}
+
+
+{block name='content'}
+
+    <article class="cl pd-20">
+        <p class="f-20 text-success">欢迎使用服装销售后台系统
+        <p>上次登录{:session('admin_info.login_ip')}  上次登录时间：{$Think.session.admin_info.login_time}
+        </p>
+        <table class="table table-border table-bordered table-bg mt-20">
+            <thead>
+            <tr>
+                <th colspan="2" scope="col">服务器信息</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th width="30%">服务器计算机名</th>
+                <td><span id="lbServerName">{$Request.host}</span></td>
+            </tr>
+            <tr>
+                <td>服务器IP地址</td>
+                <td>{$Request.ip}</td>
+            </tr>
+            <tr>
+                <td>服务器域名</td>
+                <td>{$Request.domain}</td>
+            </tr>
+            <tr>
+                <td>服务器端口 </td>
+                <td>{$Request.port}</td>
+            </tr>
+            <tr>
+                <td>当前请求URL</td>
+                <!--传入参数true,显示包括域名的完整绝对URL请求地址-->
+                <!--PHP语句:<?php echo \think\Request::instance()->url(true); ?>-->
+                <td>{$Request.url.true}</td>
+            </tr>
+            <tr>
+                <td>当前PHP版本 </td>
+                <td>{$Think.const.PHP_VERSION}</td>
+            </tr>
+            <tr>
+                <td>服务器版本</td>
+                <td>{$Think.const.PHP_OS}</td>
+            </tr>
+
+            <tr>
+                <td>当前Session数量 </td>
+                <td>{:count($_SESSION)}</td>
+            </tr>
+            <tr>
+                <td>当前SessionID </td>
+                <td>{:session_id()}</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </article>
+
+
+{/block}

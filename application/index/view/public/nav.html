@@ -1,0 +1,170 @@
+<ul class="layui-nav">
+    <li class="layui-nav-item ">
+        <a href="/">首页</a>
+    </li>
+    <li class="layui-nav-item">
+        <a style="cursor: pointer;" id="personal" >个人中心<span class="layui-badge-dot"></span></a>
+    </li>
+    <li class="layui-nav-item">
+        <a style="cursor: pointer;" id="messages">消息<span class="layui-badge" id="message">0</span></a>
+    </li>
+    <li class="layui-nav-item">
+        <a style="cursor: pointer;" onclick="car()"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true">&nbsp;购物车</span></a>
+    </li>
+    <li class="layui-nav-item">
+        <a style="cursor: pointer;" onclick="order()">我的订单</a>
+    </li>
+    <!--<li class="layui-nav-item">-->
+        <!--<a style="cursor: pointer;color: red" onclick="skill()">秒杀专区</a>-->
+    <!--</li>-->
+    <li class="layui-nav-item" >
+        <a>更多</a>
+        <dl class="layui-nav-child ">
+            <dd><a id="link">网站信息</a></dd>
+            <dd><a  style="cursor: pointer;"  data-toggle="modal" data-target="#myModal3">反馈</a></dd>
+        </dl>
+    </li>
+    <div class="input-group" style="width: 25%;position: absolute;right: 150px;margin-top: -45px;">
+        <input type="text" class="form-control" placeholder="输入商品内容..." id="product" style="height: 35px;line-height: 35px;border: 2px solid red;border-radius: 0px">
+            <span class="input-group-btn" >
+             <button class="btn btn-default" style="height: 35px;line-height: 35px;" type="button" onclick="search()" id="search"><span class="glyphicon glyphicon-search" aria-hidden="true" style="top: -3px;"></span>&nbsp;</button>
+         </span>
+    </div>
+    {if condition="$Think.session.user_info"}
+        <li class="layui-nav-item" style="float: right;">
+           <img src="{$Think.session.user_info.avatar_url}" class="layui-nav-img">Hi,{$Think.session.user_info.user_name}!
+            <dl class="layui-nav-child">
+                <dd><a style="cursor: pointer;" onclick="logout()">退了</a></dd>
+            </dl>
+        </li>
+    {else/}
+        <li class="layui-nav-item" style="float: right;" >
+            <div  style="cursor: pointer;" data-toggle="modal" data-target="#myModal1" id="register">注册</div>
+        </li>
+        <li class="layui-nav-item" style="float: right;" >
+            <a style="cursor: pointer;" data-toggle="modal" data-target="#myModal2" >登入</a>
+        </li>
+    {/if}
+
+</ul>
+
+<script>
+    var i=1;
+    function inform(){
+        if(i>0){
+            $.get('http://www.tiancloth.com/index/informs',{},function(res){
+                if(res.status){
+                    $('#message').empty();
+                    $('#message').text(res.message);
+                }else {
+                    $('#message').text(0);
+                    return false;
+                }
+            });
+
+            setTimeout(function(){
+                inform();
+            },300000000);
+        }
+
+
+    }
+    inform();
+
+    function search(){
+        var product= $.trim($('#product').val());
+        if(!product){
+            alert('请输入查找的商品名字');
+            return false;
+        }else {
+            window.location.href="http://www.tiancloth.com/index/product/search?product="+product;
+
+        }
+    }
+
+    function  logout(){
+        $.post('http://www.tiancloth.com/logout',{},function(res){
+            if(res.status){
+                layer.msg(res.message, {icon: 1},function(){
+                    window.location.reload();
+                });
+
+            }else {
+                layer.msg(res.message,{icon:2});
+            }
+
+        },'json');
+
+    }
+
+    $('#link').click(function(){
+        layer.tips('本网站由个人开发纯粹用于娱乐项目 禁止用于商用 ^o^', '#link',{
+            tips: [1, 'black'],
+            time: 4000
+        });
+    });
+
+    function car(){
+        $.get('http://www.tiancloth.com/index/car/auth',{},function(res){
+            if(res.status==0){
+                layer.msg(res.message,{icon:2});
+                return false;
+            }else {
+                window.location.href='http://www.tiancloth.com/index/car';
+            }
+        },'json')
+    }
+
+    function order(){
+        $.get('http://www.tiancloth.com/index/order/auth',{},function(res){
+            if(res.status==0){
+                layer.msg(res.message,{icon:2});
+                return false;
+            }else {
+                window.location.href='http://www.tiancloth.com/index/order';
+            }
+        },'json')
+    }
+
+    function skill(){
+        $.get('http://www.tiancloth.com/index/skill/auth',{},function(res){
+            if(res.status==0){
+                layer.msg(res.message,{icon:2});
+                return false;
+            }else {
+                window.location.href='http://www.tiancloth.com/index/skill/index';
+            }
+        },'json')
+    }
+
+    $('#personal').click(function(){
+        $.get('http://www.tiancloth.com/index/user/auth',{},function(res){
+            if(res.status==0){
+                layer.msg(res.message,{icon:2});
+                return false;
+            }else {
+                window.location.href='http://www.tiancloth.com/index/personal';
+            }
+        },'json')
+    });
+
+    $('#messages').click(function(){
+        $.get('http://www.tiancloth.com/index/message/auth',{},function(res){
+            if(res.status==0){
+                layer.msg(res.message,{icon:2});
+                return false;
+            }else {
+                layer.open({
+                    type: 2,
+                    title: '新消息',
+                    shadeClose: true,
+                    shade: false,
+                    maxmin: true, //开启最大化最小化按钮
+                    area: ['80%', '100%'],
+                    content:'http://www.tiancloth.com/index/messages'
+                });
+            }
+        },'json')
+    })
+
+</script>

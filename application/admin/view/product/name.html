@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {include file="public/extend" /}
+</head>
+<body>
+<div class="container">
+    <form class="layui-form" action="">
+        <input type="hidden" id="pid" value="{$product.id}" name="id">
+        <div class="layui-form-item">
+            <label class="layui-form-label">品牌</label>
+            <div class="layui-input-block">
+                <input type="text" name="brand" id="brand" value="{$product.brand}" required  lay-verify="required" placeholder="请输入品牌" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" id="name" required value="{$product.name}" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品价格</label>
+            <div class="layui-input-block">
+                <input type="text" name="price" id="price" required value="{$product.price}" lay-verify="required" placeholder="要求：xx.xx" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </form>
+    <hr/>
+    <hr/>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="confirm()">确认提交</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['form'], function() {
+        var form = layui.form;
+    });
+
+    function confirm(){
+        $.post('http://www.tiancloth.com/admin/product/save_name',$('form').serialize(),function(res){
+            if(res.status){
+                layer.msg(res.message,{icon:1});
+                setTimeout(function(){
+                    window.location.reload();
+                },2000);
+
+            }else {
+                layer.msg('修改失败',{icon:2});
+                return false;
+            }
+        })
+    }
+</script>
+</body>
+</html>

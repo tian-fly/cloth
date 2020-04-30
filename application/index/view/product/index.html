@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品详情</title>
+    {include file='public/header' /}
+    <style type="text/css">
+      .top{
+          border: 1px solid black;
+          padding: 5px 5px;
+      }
+        input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
+            -webkit-appearance: none;
+        }
+        input[type="number"]{
+            -moz-appearance: textfield;
+        }
+        .active{
+            border: 1px solid red;
+
+        }
+
+        .visitActive{
+            border: 3px solid peachpuff;
+        }
+
+        .origin{
+            width: 600px;
+            height: 500px;
+            position: absolute;
+            left:10px;
+            top:0px;
+        }
+        .origin{
+            overflow: hidden;
+            display: none;
+            left: 600px;
+            top:50px;
+            z-index: 99;
+        }
+        .max{
+            width: 40px;
+            height: 40px;
+            background: rgba(254,238,167,.4);
+            position: absolute;
+            left: 0;
+            top:0;
+            display: none;
+        }
+        .
+    </style>
+
+</head>
+<body>
+{include file="public/nav" /}
+{include file="public/nav_model" /}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-sm-6 thumb" style="position: relative;">
+            <img src="{$productDetail.standards[0]['center_img']['img_url']}" style="width:360px;height: 400px;" id="image">
+            <div class="max"></div>
+        </div>
+        <div class="origin">
+            <img src="{$productDetail.standards[0]['center_img']['img_url']}" style="width:1200px;position: absolute" id="imageM">
+        </div>
+        <div class="col-md-8 col-sm-6">
+            <form class="layui-form">
+                <input type="hidden" name="id" value="{$productDetail.id}">
+                <input type="hidden" name="standard_id" value="{$productDetail.standards[0]['id']}">
+            <div class="page-header">
+                <h1>{$productDetail.brand}<small>{$productDetail.param.detail}&nbsp;&nbsp;<span style="color: red" >¥ <span id="price">{$productDetail.price}</span></span><span style="font-size: 10px;color: red;float: right;position: relative;top: 10px;">总销量：{$productDetail.sell}件</span></small></h1>
+            </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 100px">颜&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;色</label>
+                    <div class="layui-input-block">
+                        <ul class="row" style="line-height: 30px;" id="color" >
+                            {volist name="$productDetail.color" id="vo"}
+                                <li title="{$vo}" style="border: 1px solid {if condition='$key eq 0'}red{else/}black{/if};text-align: center;margin-left: 5px;margin-top: 5px;cursor: pointer" class="col-md-3"  value="{$i}" >
+                                    {$vo}
+                                </li>
+                            {/volist}
+                        </ul>
+                        <input type="hidden" value="{$productDetail.standards[0]['color']}" id="colorInput">
+                    </div>
+                </div>
+                <div class="layui-form-item" >
+                    <label class="layui-form-label" style="width: 100px">尺&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</label>
+                    <div class="layui-input-block" >
+                        <ul class="row" style="line-height: 30px;" id="size" >
+                            {volist name="$productDetail.size" id="vo"}
+                                <li title="{$vo}" style="border: 1px solid {if condition='$key eq 0'}red{else/}black{/if};text-align: center;margin-left: 5px;cursor: pointer" class="col-md-2" value="{$i}"  >
+                                   {$vo}
+                                </li>
+                            {/volist}
+                        </ul>
+                        <input type="hidden" value="{$productDetail.standards[0]['size']}" id="sizeInput">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 100px">数&nbsp;&nbsp;量/件</label>
+                            <div class="layui-input-block">
+                                <div class="input-group">
+                                    <span class="input-group-addon" onclick="reduceNum()">-</span>
+                                    <input type="number" class="form-control" value="1" name="num" id="inputNum">
+                                    <span class="input-group-addon" onclick="addNum()">+</span>
+                                </div>
+                                <span>库存：<span style="color: red" id="stock">{$productDetail.standards[0]['stock']}</span>件</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7 col-md-offset-1">
+                        小计：<span style="color: red;font-size: 20px;" >¥ <span id="totalPrice">{$productDetail.price}</span></span>
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-danger" style="width: 100%" onclick="addToCar()">加入购物车</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <ul class="layui-tab-title">
+            <li class="layui-this">商品详情</li>
+            <li>商品评论</li>
+            <li>服务条款</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <h2>商品参数</h2>
+
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td colspan="2" style="background-color:pink;color: white">适用季节</td>
+                                <td colspan="4">{$productDetail.param.season}</td>
+                                <td colspan="2" style="background-color:pink;color: white">风格</td>
+                                <td colspan="4">{$productDetail.param.type}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"  style="background-color:pink;color: white">面料</td>
+                                <td colspan="4">{$productDetail.param.fabric}</td>
+                                <td colspan="2" style="background-color:pink;color: white">材质</td>
+                                <td colspan="4">{$productDetail.param.material}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="background-color:pink;color: white">使用场合</td>
+                                <td colspan="4">{$productDetail.param.scene}</td>
+                                <td colspan="2" style="background-color:pink;color: white">品牌名称</td>
+                                <td colspan="4">{$productDetail.brand}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="background-color:pink;color: white">产地</td>
+                                <td colspan="4">{$productDetail.param.place}</td>
+                                <td colspan="2" style="background-color:pink;color: white">洗涤说明</td>
+                                <td colspan="4">{$productDetail.param.explain}</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                <h2>商品展示</h2>
+                <hr/>
+                <div align="center">
+                    {foreach name="$productDetail.images" item="vo"}
+                        <img src="{$vo.image.img_url}">
+                    {/foreach}
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                {foreach name="comments" item="vo"}
+                <div class="layui-row">
+                    <div class="layui-col-md1"><img src="{$vo.user.avatar_url}" class="layui-nav-img"></div>
+                    <div class="layui-col-md1" style="position: relative;top:5px;">匿名</div>
+                    <div class="layui-col-md2">{$vo.create_time}&nbsp;&nbsp;<span style="font-size: 20px;">:</span></div>
+                    <div class="layui-col-md4" style="position: relative;top:5px;">选择类型： {$vo.standard.color}&nbsp;{$vo.standard.size}</div>
+                    <div class="layui-col-md4">
+                        {for start="0" end="$vo.star"}
+                            <img src="http://www.tiancloth.com/images/system/product/star.png">
+                        {/for}
+                    </div>
+                </div>
+                <br/>
+                <div>
+                   {$vo.content}
+                </div>
+                <hr/>
+                {/foreach}
+                {$comments->render()}
+            </div>
+            <div class="layui-tab-item">
+               七天无理由包退
+                十五天包换
+                一年免费保修
+            </div>
+        </div>
+    </div>
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <ul class="layui-tab-title">
+            <li class="layui-this">浏览过的商品</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="row">
+                    {foreach name="$visitProduct" item="vo"}
+                    <div class="col-sm-6 col-md-3">
+                        <div class="thumbnail"  >
+                            <a style="cursor: pointer" href="http://www.tiancloth.com/index/product/{$vo.id}"><img src="{$vo.centerImg.img_url}" alt="..." ></a>
+                            <div class="caption">
+                                <h3 style="color: red">¥{$vo.price}</h3>
+                                <p>{$vo.name}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {/foreach}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function(){
+
+        $('.thumb').mouseover(function(e){
+            $('.origin').css('display','block');
+            $('.max').css('display','block');
+        });
+        $('.thumb').mousemove(function(e){
+            var pageX= e.pageX;
+            var pageY= e.pageY;
+            var offsetX=$('.thumb').offset().left;
+            var offsetY=$('.thumb').offset().top;
+            var relativeX=pageX-offsetX;
+            var relativeY=pageY-offsetY;
+
+            var magOffsetX=$('.max').width()/2;
+            var magOffsetY=$('.max').height()/2;
+            $('.max').css({left:relativeX-magOffsetX+'px',top:relativeY-magOffsetY+'px'});
+
+            var magX=$('.max').position().left;
+            var magY=$('.max').position().top;
+
+            var maxMagX = $('.thumb').width() - $('.max').width();
+
+            var maxMagY = $('.thumb').height() - $('.max').height();
+
+
+            if (magX <= 0) { $('.max').css('left', '0px'); }
+
+
+            if (magX >= maxMagX) { $('.max').css('left', maxMagX + 'px'); }
+
+
+            if (magY <= 0) { $('.max').css('top', '0px'); }
+
+
+
+            if (magY >= maxMagY) { $('.max').css('top', maxMagY + 'px'); }
+
+
+
+            var originX = magX * 2.5;
+
+            var originY = magY * 2.5;
+
+            $('.origin img').css({ left: -originX + 'px', top: -originY + 'px' });
+
+        })
+
+// 当鼠标离开“缩略图”窗口时，隐藏“原图”窗口和“放大镜”框
+
+        $('.thumb').mouseout(function () {
+
+            $('.origin').css('display', 'none');
+
+            $('.max').css('display', 'none');
+
+        })
+
+
+        $('.thumbnail').each(function(){
+           $(this).hover(function(){
+               $(this).addClass('visitActive');
+           },function(){
+               $(this).removeClass('visitActive');
+           })
+        });
+
+        $('#color li').each(function(){
+            $(this).click(function(){
+//                $('#color li').each(function(){
+//                    $(this).css('border','1px solid black');
+//                });
+
+                var pid=$("input[name='id']").val();
+                var color=$.trim($(this).text());
+                var size = $('#sizeInput').val();
+                var colorId = $(this).val();
+
+                $.get('http://www.tiancloth.com/index/product/productPicture',{color:color,pid:pid,size:size},function(res){
+                    if(res.status){
+                        $('#color li').each(function(){
+                            $(this).css('border','1px solid black');
+                        });
+
+                        $('#image').attr('src',res.message);
+                        $('#imageM').attr('src',res.message);
+                        $("input[name='num']").val(1);
+                        $('#stock').text(res.stock);
+                        $("input[name='standard_id']").val(res.sid);
+                        $('#colorInput').val(color);
+                        $('#color li:nth-child('+colorId+')').css('border','1px solid red');
+                    }else {
+                         layer.msg(res.message,{icon:2});
+                         return false;
+                    }
+                });
+
+
+            })
+        });
+
+        $('#size li').each(function(){
+            $(this).click(function(){
+//                $('#size li').each(function(){
+//                    $(this).css('border','1px solid black');
+//                });
+
+//                $('#sizeInput').val($(this).val());
+//                $(this).css('border','1px solid red');
+
+                var pid=$("input[name='id']").val();
+                var color= $('#colorInput').val();
+                var size=$.trim($(this).text());
+                var sizeId = $(this).val();
+                $.get('http://www.tiancloth.com/index/product/productPicture',{size:size,pid:pid,color:color},function(res){
+                    if(res.status){
+                        $('#size li').each(function(){
+                            $(this).css('border','1px solid black');
+                        });
+
+//                        $('#price').text(res.price);
+                        $("input[name='num']").val(1);
+//                        $('#totalPrice').text(res.price);
+                        $('#stock').text(res.stock);
+                        $("input[name='standard_id']").val(res.sid);
+                        $('#sizeInput').val(size);
+                        $('#size li:nth-child('+sizeId+')').css('border','1px solid red');
+                    }else {
+                        layer.msg(res.message,{icon:2});
+                        return false;
+                    }
+                });
+
+
+            })
+        })
+    })
+</script>
+
+
+<script>
+    layui.use(['form'], function(){
+        var form = layui.form;
+
+
+    });
+</script>
+
+<script>
+   function reduceNum(){
+        var num= parseInt($("input[name='num']").val());
+        var pid=$("input[name='id']").val();
+        if(num>1){
+            $("input[name='num']").val(num-1);
+            var numAfter= parseInt($("input[name='num']").val());
+            var price=parseInt($('#price').text());
+            var totalPrice=price*numAfter;
+            $('#totalPrice').text(totalPrice);
+        }else {
+            alert('不能少于一件');
+            return false;
+        }
+    }
+
+    function addNum(){
+        var num= parseInt($("input[name='num']").val());
+        var stock=parseInt($('#stock').text());
+        if(num<stock){
+            $("input[name='num']").val(num+1);
+            var numAfter= parseInt($("input[name='num']").val());
+            var price=parseInt($('#price').text());
+            var totalPrice=price*numAfter;
+            $('#totalPrice').text(totalPrice);
+        }else {
+            alert('超过库存容量');
+            return false;
+        }
+
+    }
+
+    $('#inputNum').bind('input propertychange',function(){
+        var num= parseInt($("input[name='num']").val());
+        var stock=parseInt($('#stock').text());
+        if(num>stock){
+            $("input[name='num']").val(stock);
+        }
+        if(!num){
+            $("input[name='num']").val(1);
+        }
+        var numAfter= parseInt($("input[name='num']").val());
+       var price=parseInt($('#price').text());
+        var totalPrice=price*numAfter;
+        $('#totalPrice').text(totalPrice);
+
+    });
+
+    function addToCar(){
+        var num=$("input[name='num']").val();
+        var pid=$("input[name='id']").val();
+        var standard_id=$("input[name='standard_id']").val();
+        $.get('http://www.tiancloth.com/index/car/add',{id:pid,num:num,standard_id:standard_id},function(res){
+            if(res.status){
+                layer.msg(res.message,{icon:1});
+            }else {
+                layer.msg('加入购物车失败',{icon:2});
+                return false;
+            }
+        })
+    }
+
+
+</script>
+</body>
+</html>
